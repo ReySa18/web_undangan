@@ -1,0 +1,223 @@
+"use client";
+
+import { useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
+type FormState = "idle" | "submitting" | "success";
+
+export default function RsvpForm() {
+  const [name, setName] = useState("");
+  const [attendance, setAttendance] = useState<"hadir" | "tidak" | null>(null);
+  const [guests, setGuests] = useState("1");
+  const [message, setMessage] = useState("");
+  const [formState, setFormState] = useState<FormState>("idle");
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name || !attendance) return;
+
+    setFormState("submitting");
+
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    setFormState("success");
+
+    // Reset after success animation
+    setTimeout(() => {
+      setName("");
+      setAttendance(null);
+      setGuests("1");
+      setMessage("");
+      setFormState("idle");
+    }, 3000);
+  };
+
+  return (
+    <section id="rsvp" className="w-full bg-primary-bg py-16 px-6">
+      {/* Section Header */}
+      <div className="flex flex-col items-center gap-2 mb-8">
+        <motion.span
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-[11px] font-medium tracking-[4px] uppercase text-accent"
+        >
+          Konfirmasi Kehadiran
+        </motion.span>
+        <motion.h2
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          className="font-heading text-[28px] font-bold text-text-main"
+        >
+          RSVP
+        </motion.h2>
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+          className="text-[13px] text-text-muted text-center leading-relaxed max-w-xs"
+        >
+          Merupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i
+          berkenan hadir.
+        </motion.p>
+      </div>
+
+      {/* Form Card */}
+      <motion.form
+        ref={formRef}
+        onSubmit={handleSubmit}
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.2 }}
+        className="flex flex-col gap-5 w-full max-w-sm mx-auto p-7 glass-strong rounded-[20px] shadow-[0_4px_24px_rgba(0,0,0,0.04)]"
+      >
+        {/* Name */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-medium text-text-main">
+            Nama Lengkap
+          </label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Masukkan nama Anda"
+            required
+            className="w-full h-11 px-3.5 text-[13px] bg-[#F9F8FA] border border-lavender rounded-xl outline-none focus:border-accent focus:ring-1 focus:ring-accent/30 transition-all placeholder:text-[#BDBDBD]"
+          />
+        </div>
+
+        {/* Attendance */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-medium text-text-main">
+            Kehadiran
+          </label>
+          <div className="flex flex-row gap-2.5">
+            <button
+              type="button"
+              onClick={() => setAttendance("hadir")}
+              className={`flex-1 h-11 rounded-xl text-[13px] font-medium transition-all ${
+                attendance === "hadir"
+                  ? "border-[1.5px] border-accent bg-accent/8 text-accent"
+                  : "border-[1.5px] border-lavender bg-[#F9F8FA] text-text-muted"
+              }`}
+            >
+              Hadir
+            </button>
+            <button
+              type="button"
+              onClick={() => setAttendance("tidak")}
+              className={`flex-1 h-11 rounded-xl text-[13px] font-medium transition-all ${
+                attendance === "tidak"
+                  ? "border-[1.5px] border-accent bg-accent/8 text-accent"
+                  : "border-[1.5px] border-lavender bg-[#F9F8FA] text-text-muted"
+              }`}
+            >
+              Tidak Hadir
+            </button>
+          </div>
+        </div>
+
+        {/* Guests */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-medium text-text-main">
+            Jumlah Tamu
+          </label>
+          <select
+            value={guests}
+            onChange={(e) => setGuests(e.target.value)}
+            className="w-full h-11 px-3.5 text-[13px] bg-[#F9F8FA] border border-lavender rounded-xl outline-none focus:border-accent transition-all appearance-none"
+          >
+            {[1, 2, 3, 4, 5].map((n) => (
+              <option key={n} value={n}>
+                {n} Orang
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Message */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-medium text-text-main">
+            Ucapan & Doa
+          </label>
+          <textarea
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Tulis ucapan dan doa untuk kedua mempelai..."
+            rows={3}
+            className="w-full p-3.5 text-[13px] bg-[#F9F8FA] border border-lavender rounded-xl outline-none focus:border-accent focus:ring-1 focus:ring-accent/30 transition-all placeholder:text-[#BDBDBD] resize-none"
+          />
+        </div>
+
+        {/* Submit Button */}
+        <AnimatePresence mode="wait">
+          {formState === "idle" && (
+            <motion.button
+              key="submit"
+              type="submit"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="w-full h-12 bg-gradient-to-r from-accent to-accent-dark rounded-[14px] text-white text-sm font-semibold tracking-[1.5px] shadow-[0_4px_16px_rgba(196,164,138,0.3)] hover:shadow-[0_6px_20px_rgba(196,164,138,0.4)] transition-shadow"
+            >
+              KIRIM RSVP
+            </motion.button>
+          )}
+
+          {formState === "submitting" && (
+            <motion.div
+              key="loading"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              className="w-full h-12 rounded-[14px] bg-accent flex items-center justify-center"
+            >
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                className="w-6 h-6 border-2 border-white border-t-transparent rounded-full"
+              />
+            </motion.div>
+          )}
+
+          {formState === "success" && (
+            <motion.div
+              key="success"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              className="w-full h-12 rounded-[14px] bg-green-500 flex items-center justify-center gap-2"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="white"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <motion.path
+                  d="M5 13l4 4L19 7"
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 0.4 }}
+                />
+              </svg>
+              <span className="text-white text-sm font-semibold">
+                Terkirim!
+              </span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.form>
+    </section>
+  );
+}
