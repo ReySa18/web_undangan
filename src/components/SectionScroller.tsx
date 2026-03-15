@@ -30,8 +30,19 @@ function isInteractiveElement(target: EventTarget | null): boolean {
     if (target.closest(selector)) return true;
   }
 
-  // Also skip iframe clicks (map embeds)
+  // Skip iframe clicks (map embeds)
   if (target.tagName === "IFRAME") return true;
+
+  // Skip any element (or ancestor) that has cursor:pointer — these are
+  // clickable UI elements like gallery photos even if they aren't <button>s
+  let el: HTMLElement | null = target;
+  while (el) {
+    if (window.getComputedStyle(el).cursor === "pointer") return true;
+    el = el.parentElement;
+  }
+
+  // Skip clicks on fixed/absolute overlays (e.g. lightbox)
+  if (target.closest("[class*='fixed']")) return true;
 
   return false;
 }
@@ -43,6 +54,9 @@ export default function SectionScroller({
 }) {
   const isScrolling = useRef(false);
   const lastClickTime = useRef(0);
+  // Capture the mousedown/touchstart target before the DOM changes (e.g.
+  // lightbox closing removes the button from the tree before click fires).
+  const pointerDownTarget = useRef<EventTarget | null>(null);
 
   const scrollToNextSection = useCallback(() => {
     // Collect all section/footer elements as scroll targets
@@ -73,14 +87,21 @@ export default function SectionScroller({
     }
   }, []);
 
+  const handlePointerDown = useCallback((e: MouseEvent | TouchEvent) => {
+    pointerDownTarget.current = e.target;
+  }, []);
+
   const handleClick = useCallback(
     (e: MouseEvent | TouchEvent) => {
       // Don't interfere if already scrolling
       if (isScrolling.current) return;
 
-      // Don't interfere with interactive elements
-      const target = e.target as EventTarget;
-      if (isInteractiveElement(target)) return;
+      // Check BOTH the original pointerdown target and the click target.
+      // This catches cases where the DOM changes between mousedown and click
+      // (e.g. lightbox close button removes itself before the click event).
+      const clickTarget = e.target as EventTarget;
+      if (isInteractiveElement(clickTarget)) return;
+      if (isInteractiveElement(pointerDownTarget.current)) return;
 
       // Debounce rapid clicks (300ms)
       const now = Date.now();
@@ -93,13 +114,18 @@ export default function SectionScroller({
   );
 
   useEffect(() => {
-    // Use click for both desktop and mobile (click fires after touch)
+    // Capture the target at pointerdown before DOM mutations
+    document.addEventListener("mousedown", handlePointerDown, true);
+    document.addEventListener("touchstart", handlePointerDown, true);
+    // Handle the actual scroll on click
     document.addEventListener("click", handleClick);
 
     return () => {
+      document.removeEventListener("mousedown", handlePointerDown, true);
+      document.removeEventListener("touchstart", handlePointerDown, true);
       document.removeEventListener("click", handleClick);
     };
-  }, [handleClick]);
+  }, [handleClick, handlePointerDown]);
 
   return <>{children}</>;
 }
