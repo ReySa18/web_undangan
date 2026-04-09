@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useScroll, useTransform, useInView } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { SectionOrnaments } from "@/components/DecorativeOrnaments";
 
 const stories = [
@@ -64,14 +64,21 @@ function StoryCard({
   index: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const { scrollYProgress: cardProgress } = useScroll({
+    target: ref,
+    offset: ["start 0.92", "end 0.08"],
+  });
+
+  const cardOpacity = useTransform(cardProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+  const cardX = useTransform(cardProgress, [0, 0.2, 0.8, 1], [-36, 0, 0, 26]);
+  const cardY = useTransform(cardProgress, [0, 0.2, 0.8, 1], [24, 0, 0, -18]);
+  const cardScale = useTransform(cardProgress, [0, 0.2, 0.8, 1], [0.96, 1, 1, 0.98]);
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, x: -30 }}
-      animate={isInView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.6, delay: index * 0.15, type: "spring", stiffness: 100 }}
+      style={{ opacity: cardOpacity, x: cardX, y: cardY, scale: cardScale }}
+      transition={{ duration: 0.45, delay: index * 0.05, ease: "easeOut" }}
       className="flex flex-row items-start gap-5 py-2 pb-8 last:pb-0"
     >
       {/* Dot */}

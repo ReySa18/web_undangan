@@ -112,12 +112,12 @@ export function CandleOrnament({ className = "" }: OrnamentProps) {
 
           <path
             className="animate-candle-flicker"
-            d="M29 18c0 8-6 11-6 18 0 5 3 9 6 9s6-4 6-9c0-7-6-10-6-18z"
+            d="M35 18c0 8-6 11-6 18 0 5 3 9 6 9s6-4 6-9c0-7-6-10-6-18z"
             fill="#FFB703"
           />
           <path
             className="animate-candle-flicker"
-            d="M29 25c0 4-3 6-3 9 0 3 1 5 3 5 2 0 3-2 3-5 0-3-3-5-3-9z"
+            d="M35 25c0 4-3 6-3 9 0 3 1 5 3 5 2 0 3-2 3-5 0-3-3-5-3-9z"
             fill="#FFF3BF"
           />
         </g>

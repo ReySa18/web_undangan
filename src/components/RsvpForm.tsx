@@ -1,18 +1,31 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { SectionOrnaments } from "@/components/DecorativeOrnaments";
 
 type FormState = "idle" | "submitting" | "success";
 
 export default function RsvpForm() {
+  const sectionRef = useRef<HTMLElement>(null);
   const [name, setName] = useState("");
   const [attendance, setAttendance] = useState<"hadir" | "tidak" | null>(null);
   const [guests, setGuests] = useState("1");
   const [message, setMessage] = useState("");
   const [formState, setFormState] = useState<FormState>("idle");
   const formRef = useRef<HTMLFormElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const sectionOpacity = useTransform(scrollYProgress, [0, 0.16, 0.84, 1], [0, 1, 1, 0]);
+  const sectionY = useTransform(scrollYProgress, [0, 0.16, 0.84, 1], [22, 0, 0, -24]);
+
+  const formOpacity = useTransform(scrollYProgress, [0, 0.24, 0.76, 1], [0, 1, 1, 0]);
+  const formY = useTransform(scrollYProgress, [0, 0.24, 0.76, 1], [28, 0, 0, -22]);
+  const formScale = useTransform(scrollYProgress, [0, 0.24, 0.76, 1], [0.97, 1, 1, 0.985]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +49,12 @@ export default function RsvpForm() {
   };
 
   return (
-    <section id="rsvp" className="relative w-full bg-primary-bg py-16 px-6 overflow-hidden">
+    <motion.section
+      ref={sectionRef}
+      id="rsvp"
+      style={{ opacity: sectionOpacity, y: sectionY }}
+      className="relative w-full bg-primary-bg py-16 px-6 overflow-hidden"
+    >
       <SectionOrnaments className="z-0" />
 
       {/* Section Header */}
@@ -74,10 +92,8 @@ export default function RsvpForm() {
       <motion.form
         ref={formRef}
         onSubmit={handleSubmit}
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.2 }}
+        style={{ opacity: formOpacity, y: formY, scale: formScale }}
+        transition={{ duration: 0.55, ease: "easeOut" }}
         className="relative z-10 flex flex-col gap-5 w-full max-w-sm mx-auto p-7 glass-strong rounded-[20px] shadow-[0_14px_34px_rgba(0,0,0,0.36)]"
       >
         {/* Name */}
@@ -221,6 +237,6 @@ export default function RsvpForm() {
           )}
         </AnimatePresence>
       </motion.form>
-    </section>
+    </motion.section>
   );
 }

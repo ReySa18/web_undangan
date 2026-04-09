@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { SectionOrnaments } from "@/components/DecorativeOrnaments";
 
 const accounts = [
@@ -61,7 +61,15 @@ function AccountCard({
   delay?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start 0.92", "end 0.08"],
+  });
+
+  const cardOpacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+  const cardY = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [30, 0, 0, -18]);
+  const cardScale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.96, 1, 1, 0.985]);
+  const cardX = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [-18, 0, 0, 20]);
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -85,11 +93,15 @@ function AccountCard({
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 40, rotateX: 5 }}
-      animate={isInView ? { opacity: 1, y: 0, rotateX: 0 } : {}}
-      transition={{ duration: 0.7, delay, type: "spring", stiffness: 80 }}
+      style={{
+        opacity: cardOpacity,
+        y: cardY,
+        scale: cardScale,
+        x: cardX,
+        perspective: "1000px",
+      }}
+      transition={{ duration: 0.55, delay, ease: "easeOut" }}
       className="flex flex-col items-center gap-5 w-full max-w-sm p-7 glass-strong rounded-[20px] shadow-[0_12px_32px_rgba(0,0,0,0.36)]"
-      style={{ perspective: "1000px" }}
     >
       {/* Bank Logo */}
       <div className="flex items-center justify-center">{account.logo}</div>
@@ -180,8 +192,21 @@ function AccountCard({
 }
 
 export default function GiftSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const sectionOpacity = useTransform(scrollYProgress, [0, 0.16, 0.84, 1], [0, 1, 1, 0]);
+  const sectionY = useTransform(scrollYProgress, [0, 0.16, 0.84, 1], [22, 0, 0, -24]);
+
   return (
-    <section className="relative w-full bg-primary-bg py-16 px-6 overflow-hidden">
+    <motion.section
+      ref={sectionRef}
+      style={{ opacity: sectionOpacity, y: sectionY }}
+      className="relative w-full bg-primary-bg py-16 px-6 overflow-hidden"
+    >
       <SectionOrnaments className="z-0" />
 
       {/* Section Header */}
@@ -246,9 +271,9 @@ export default function GiftSection() {
       {/* Account Cards */}
       <div className="relative z-10 flex flex-col items-center gap-6 max-w-md mx-auto">
         {accounts.map((acc, i) => (
-          <AccountCard key={acc.id} account={acc} delay={i * 0.15} />
+          <AccountCard key={acc.id} account={acc} delay={i * 0.08} />
         ))}
       </div>
-    </section>
+    </motion.section>
   );
 }

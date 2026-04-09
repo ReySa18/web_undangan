@@ -1,11 +1,26 @@
 "use client";
 
+import { useRef } from "react";
 import { motion } from "framer-motion";
+import { useScroll, useTransform } from "framer-motion";
 import { FooterOrnaments } from "@/components/DecorativeOrnaments";
 
 export default function Footer() {
+  const footerRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: footerRef,
+    offset: ["start end", "end start"],
+  });
+
+  const footerOpacity = useTransform(scrollYProgress, [0, 0.2, 0.9, 1], [0, 1, 1, 0]);
+  const footerY = useTransform(scrollYProgress, [0, 0.2, 0.9, 1], [20, 0, 0, -16]);
+
   return (
-    <footer className="relative w-full bg-[linear-gradient(160deg,#120d0d_0%,#1a1a1a_55%,#2b1313_100%)] py-12 px-6 border-t border-accent/30 overflow-hidden">
+    <motion.footer
+      ref={footerRef}
+      style={{ opacity: footerOpacity, y: footerY }}
+      className="relative w-full bg-[linear-gradient(160deg,#120d0d_0%,#1a1a1a_55%,#2b1313_100%)] py-12 px-6 border-t border-accent/30 overflow-hidden"
+    >
       <FooterOrnaments className="z-0" />
 
       <div className="relative z-10 flex flex-col items-center gap-6 max-w-md mx-auto">
@@ -59,6 +74,6 @@ export default function Footer() {
           Made with love
         </span>
       </div>
-    </footer>
+    </motion.footer>
   );
 }

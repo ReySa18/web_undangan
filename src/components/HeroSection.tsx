@@ -38,7 +38,7 @@ export default function HeroSection() {
             alt="Hero Background"
             fill
             priority
-            className="object-cover object-[center_35%]"
+            className="object-cover object-[center_35%] md:scale-[0.94]"
             sizes="100vw"
           />
           {/* Overlay to ensure text readability */}

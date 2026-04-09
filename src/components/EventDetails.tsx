@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { SectionOrnaments } from "@/components/DecorativeOrnaments";
 
 function getTimeRemaining(targetDate: Date) {
@@ -57,17 +57,29 @@ function EventCard({
   delay?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start 0.92", "end 0.08"],
+  });
+
+  const cardOpacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+  const cardY = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [28, 0, 0, -20]);
+  const cardScale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.96, 1, 1, 0.98]);
+  const cardX = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [-22, 0, 0, 22]);
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 40, rotateX: 5 }}
-      animate={isInView ? { opacity: 1, y: 0, rotateX: 0 } : {}}
-      transition={{ duration: 0.7, delay, type: "spring", stiffness: 80 }}
+      style={{
+        opacity: cardOpacity,
+        y: cardY,
+        scale: cardScale,
+        x: cardX,
+        perspective: "1000px",
+      }}
+      transition={{ duration: 0.55, delay, ease: "easeOut" }}
       whileHover={{ scale: 1.02, rotateY: 2 }}
       className="flex flex-col items-center gap-4 w-full max-w-sm p-7 glass-strong rounded-[20px] shadow-[0_14px_34px_rgba(0,0,0,0.36)] cursor-default"
-      style={{ perspective: "1000px" }}
     >
       {/* Icon */}
       <div className="flex items-center justify-center w-[52px] h-[52px] rounded-full bg-gradient-to-br from-accent to-accent-dark">
@@ -109,9 +121,18 @@ function EventCard({
 }
 
 export default function EventDetails() {
+  const sectionRef = useRef<HTMLElement>(null);
   const targetDate = new Date("2026-05-16T00:00:00+07:00");
   const [time, setTime] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [mounted, setMounted] = useState(false);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const sectionOpacity = useTransform(scrollYProgress, [0, 0.16, 0.84, 1], [0, 1, 1, 0]);
+  const sectionY = useTransform(scrollYProgress, [0, 0.16, 0.84, 1], [22, 0, 0, -24]);
 
   useEffect(() => {
     setMounted(true);
@@ -123,7 +144,11 @@ export default function EventDetails() {
   }, []);
 
   return (
-    <section className="relative w-full bg-primary-bg py-16 px-6 overflow-hidden">
+    <motion.section
+      ref={sectionRef}
+      style={{ opacity: sectionOpacity, y: sectionY }}
+      className="relative w-full bg-primary-bg py-16 px-6 overflow-hidden"
+    >
       <SectionOrnaments className="z-0" />
 
       {/* Section Header */}
@@ -170,7 +195,7 @@ export default function EventDetails() {
           venue="Gereja Santo Paulus"
           address="Jl. Raya Kebahagiaan No. 123, Jakarta Selatan"
           mapUrl="https://maps.google.com"
-          delay={0}
+          delay={0.05}
           icon={
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path
@@ -190,7 +215,7 @@ export default function EventDetails() {
           venue="Ballroom Grand Hotel"
           address="Jl. Raya Kebahagiaan No. 456, Jakarta Selatan"
           mapUrl="https://maps.google.com"
-          delay={0.15}
+          delay={0.1}
           icon={
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path
@@ -204,6 +229,6 @@ export default function EventDetails() {
           }
         />
       </div>
-    </section>
+    </motion.section>
   );
 }

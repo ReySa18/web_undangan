@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { SectionOrnaments } from "@/components/DecorativeOrnaments";
 
 const locations = [
@@ -55,14 +55,21 @@ function MapCard({
   delay?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start 0.92", "end 0.08"],
+  });
+
+  const cardOpacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+  const cardY = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [28, 0, 0, -18]);
+  const cardScale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.96, 1, 1, 0.985]);
+  const cardX = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [-18, 0, 0, 20]);
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 40 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, delay, type: "spring", stiffness: 80 }}
+      style={{ opacity: cardOpacity, y: cardY, scale: cardScale, x: cardX }}
+      transition={{ duration: 0.55, delay, ease: "easeOut" }}
       className="flex flex-col items-center gap-4 w-full max-w-sm glass-strong rounded-[20px] shadow-[0_10px_32px_rgba(0,0,0,0.36)] overflow-hidden"
     >
       {/* Map Embed */}
@@ -132,8 +139,21 @@ function MapCard({
 }
 
 export default function MapSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const sectionOpacity = useTransform(scrollYProgress, [0, 0.16, 0.84, 1], [0, 1, 1, 0]);
+  const sectionY = useTransform(scrollYProgress, [0, 0.16, 0.84, 1], [22, 0, 0, -24]);
+
   return (
-    <section className="relative w-full bg-secondary-bg py-16 px-6 overflow-hidden">
+    <motion.section
+      ref={sectionRef}
+      style={{ opacity: sectionOpacity, y: sectionY }}
+      className="relative w-full bg-secondary-bg py-16 px-6 overflow-hidden"
+    >
       <SectionOrnaments className="z-0" />
 
       {/* Section Header */}
@@ -170,9 +190,9 @@ export default function MapSection() {
       {/* Map Cards */}
       <div className="relative z-10 flex flex-col items-center gap-6 max-w-md mx-auto">
         {locations.map((loc, i) => (
-          <MapCard key={loc.id} location={loc} delay={i * 0.15} />
+          <MapCard key={loc.id} location={loc} delay={i * 0.08} />
         ))}
       </div>
-    </section>
+    </motion.section>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 import { SectionOrnaments } from "@/components/DecorativeOrnaments";
 
 const photos = [
@@ -35,12 +35,21 @@ function wrapIndex(value: number, length: number) {
 }
 
 export default function InteractiveGallery() {
+  const sectionRef = useRef<HTMLElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [isPaused, setIsPaused] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const carouselTouchStartX = useRef<number | null>(null);
   const lightboxTouchStartX = useRef<number | null>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const sectionOpacity = useTransform(scrollYProgress, [0, 0.14, 0.86, 1], [0, 1, 1, 0]);
+  const sectionY = useTransform(scrollYProgress, [0, 0.14, 0.86, 1], [24, 0, 0, -24]);
 
   useEffect(() => {
     const onResize = () => setIsMobile(window.innerWidth < 768);
@@ -102,7 +111,11 @@ export default function InteractiveGallery() {
   const selectedPhoto = selectedIndex !== null ? photos[selectedIndex] : null;
 
   return (
-    <section className="relative w-full bg-secondary-bg py-16 px-6 overflow-hidden">
+    <motion.section
+      ref={sectionRef}
+      style={{ opacity: sectionOpacity, y: sectionY }}
+      className="relative w-full bg-secondary-bg py-16 px-6 overflow-hidden"
+    >
       <SectionOrnaments className="z-0 opacity-75" />
 
       <div className="relative z-10 flex flex-col items-center gap-2 mb-2">
@@ -121,7 +134,7 @@ export default function InteractiveGallery() {
           transition={{ delay: 0.1 }}
           className="font-heading text-[30px] font-bold text-text-main"
         >
-          Galeri {photos.length} Foto
+          Galeri Foto
         </motion.h2>
         <motion.p
           initial={{ opacity: 0, y: 10 }}
@@ -130,7 +143,7 @@ export default function InteractiveGallery() {
           transition={{ delay: 0.2 }}
           className="text-[13px] text-text-muted text-center leading-relaxed max-w-md"
         >
-          Slider berputar otomatis. Tekan foto untuk melihat tampilan penuh.
+          Tekan foto untuk melihat tampilan penuh.
         </motion.p>
       </div>
 
@@ -318,6 +331,6 @@ export default function InteractiveGallery() {
           </motion.div>
         )}
       </AnimatePresence>
-    </section>
+    </motion.section>
   );
 }
