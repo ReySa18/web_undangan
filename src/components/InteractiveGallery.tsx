@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { SectionOrnaments } from "@/components/DecorativeOrnaments";
@@ -28,8 +28,6 @@ const photos = [
   { id: 20, src: "/DSC_0310.webp", alt: "Momen 11" },
   { id: 21, src: "/yessi 4.webp", alt: "Momen 21" },
   { id: 22, src: "/yessi 5.webp", alt: "Momen 22" },
-  { id: 23, src: "/yessi 6.webp", alt: "Momen 23" },
-  { id: 24, src: "/DSC_0292.webp", alt: "Momen 24" },
 ];
 
 function wrapIndex(value: number, length: number) {
@@ -41,6 +39,8 @@ export default function InteractiveGallery() {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [isPaused, setIsPaused] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const carouselTouchStartX = useRef<number | null>(null);
+  const lightboxTouchStartX = useRef<number | null>(null);
 
   useEffect(() => {
     const onResize = () => setIsMobile(window.innerWidth < 768);
@@ -66,6 +66,10 @@ export default function InteractiveGallery() {
       setActiveIndex(next);
       return next;
     });
+  };
+
+  const moveCarousel = (delta: number) => {
+    setActiveIndex((prev) => wrapIndex(prev + delta, photos.length));
   };
 
   useEffect(() => {
@@ -117,7 +121,7 @@ export default function InteractiveGallery() {
           transition={{ delay: 0.1 }}
           className="font-heading text-[30px] font-bold text-text-main"
         >
-          Galeri 22 Foto
+          Galeri {photos.length} Foto
         </motion.h2>
         <motion.p
           initial={{ opacity: 0, y: 10 }}
@@ -134,6 +138,23 @@ export default function InteractiveGallery() {
         className="relative z-10 mx-auto mt-8 h-[300px] w-full max-w-5xl md:h-[420px]"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
+        onTouchStart={(event) => {
+          const touch = event.changedTouches[0];
+          carouselTouchStartX.current = touch?.clientX ?? null;
+          setIsPaused(true);
+        }}
+        onTouchEnd={(event) => {
+          const startX = carouselTouchStartX.current;
+          const endX = event.changedTouches[0]?.clientX;
+          if (startX !== null && typeof endX === "number") {
+            const delta = endX - startX;
+            if (Math.abs(delta) > 42) {
+              moveCarousel(delta > 0 ? -1 : 1);
+            }
+          }
+          carouselTouchStartX.current = null;
+          setIsPaused(false);
+        }}
       >
         {visibleSlides.map(({ offset, index, distance, photo }) => {
           const x = offset * (isMobile ? 96 : 190);
@@ -158,7 +179,7 @@ export default function InteractiveGallery() {
                 scale,
                 opacity,
                 rotateY: offset * (isMobile ? -8 : -14),
-                zIndex: 50 - distance,
+                zIndex: 30 - distance,
               }}
               transition={{ type: "spring", stiffness: 190, damping: 24 }}
               whileHover={distance === 0 ? { scale: 1.03 } : { scale: Math.min(scale + 0.04, 1) }}
@@ -189,16 +210,22 @@ export default function InteractiveGallery() {
 
         <button
           type="button"
-          onClick={() => setActiveIndex((prev) => wrapIndex(prev - 1, photos.length))}
-          className="absolute left-1 top-1/2 z-40 -translate-y-1/2 rounded-full border border-accent/45 bg-[rgba(15,10,10,0.7)] px-3 py-2 text-accent transition hover:bg-[rgba(15,10,10,0.9)] md:left-4"
+          onClick={(event) => {
+            event.stopPropagation();
+            moveCarousel(-1);
+          }}
+          className="absolute left-2 top-1/2 z-[80] -translate-y-1/2 rounded-full border border-accent/45 bg-[rgba(15,10,10,0.82)] px-3 py-2 text-accent transition hover:bg-[rgba(15,10,10,0.95)] md:left-4"
         >
           &#8249;
         </button>
 
         <button
           type="button"
-          onClick={() => setActiveIndex((prev) => wrapIndex(prev + 1, photos.length))}
-          className="absolute right-1 top-1/2 z-40 -translate-y-1/2 rounded-full border border-accent/45 bg-[rgba(15,10,10,0.7)] px-3 py-2 text-accent transition hover:bg-[rgba(15,10,10,0.9)] md:right-4"
+          onClick={(event) => {
+            event.stopPropagation();
+            moveCarousel(1);
+          }}
+          className="absolute right-2 top-1/2 z-[80] -translate-y-1/2 rounded-full border border-accent/45 bg-[rgba(15,10,10,0.82)] px-3 py-2 text-accent transition hover:bg-[rgba(15,10,10,0.95)] md:right-4"
         >
           &#8250;
         </button>
@@ -216,27 +243,16 @@ export default function InteractiveGallery() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[90] flex items-center justify-center bg-black/90 backdrop-blur-md p-5"
+            className="fixed inset-0 z-[90] flex items-center justify-center bg-black/90 backdrop-blur-md px-3 pb-18 pt-16 md:p-5"
             onClick={() => setSelectedIndex(null)}
           >
             <button
               type="button"
               onClick={(event) => {
                 event.stopPropagation();
-                setSelectedIndex(null);
-              }}
-              className="absolute right-5 top-5 rounded-full border border-accent/35 bg-[rgba(15,10,10,0.75)] px-3 py-1.5 text-text-main"
-            >
-              X
-            </button>
-
-            <button
-              type="button"
-              onClick={(event) => {
-                event.stopPropagation();
                 moveLightbox(-1);
               }}
-              className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full border border-accent/40 bg-[rgba(15,10,10,0.75)] px-3 py-2 text-accent md:left-8"
+              className="absolute left-2 top-1/2 z-[120] -translate-y-1/2 rounded-full border border-accent/40 bg-[rgba(15,10,10,0.82)] px-3 py-2 text-accent md:left-8"
             >
               &#8249;
             </button>
@@ -246,8 +262,23 @@ export default function InteractiveGallery() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.94, y: 12 }}
               transition={{ duration: 0.25 }}
-              className="relative h-[78vh] w-full max-w-3xl overflow-hidden rounded-2xl border border-accent/30"
+              className="relative z-[100] h-[72vh] w-full max-w-[calc(100vw-1.8rem)] overflow-hidden rounded-2xl border border-accent/30 md:h-[78vh] md:max-w-3xl"
               onClick={(event) => event.stopPropagation()}
+              onTouchStart={(event) => {
+                const touch = event.changedTouches[0];
+                lightboxTouchStartX.current = touch?.clientX ?? null;
+              }}
+              onTouchEnd={(event) => {
+                const startX = lightboxTouchStartX.current;
+                const endX = event.changedTouches[0]?.clientX;
+                if (startX !== null && typeof endX === "number") {
+                  const delta = endX - startX;
+                  if (Math.abs(delta) > 42) {
+                    moveLightbox(delta > 0 ? -1 : 1);
+                  }
+                }
+                lightboxTouchStartX.current = null;
+              }}
             >
               <Image
                 src={selectedPhoto.src}
@@ -265,9 +296,20 @@ export default function InteractiveGallery() {
                 event.stopPropagation();
                 moveLightbox(1);
               }}
-              className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full border border-accent/40 bg-[rgba(15,10,10,0.75)] px-3 py-2 text-accent md:right-8"
+              className="absolute right-2 top-1/2 z-[120] -translate-y-1/2 rounded-full border border-accent/40 bg-[rgba(15,10,10,0.82)] px-3 py-2 text-accent md:right-8"
             >
               &#8250;
+            </button>
+
+            <button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                setSelectedIndex(null);
+              }}
+              className="absolute right-3 top-3 z-[130] rounded-full border border-accent/35 bg-[rgba(15,10,10,0.9)] px-3 py-1.5 text-text-main md:right-5 md:top-5"
+            >
+              X
             </button>
 
             <p className="absolute bottom-5 left-1/2 -translate-x-1/2 rounded-full border border-accent/30 bg-[rgba(15,10,10,0.75)] px-4 py-1.5 text-[11px] tracking-[2px] uppercase text-text-muted">
