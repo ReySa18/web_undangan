@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { SectionOrnaments } from "@/components/DecorativeOrnaments";
 
 type FormState = "idle" | "submitting" | "success";
 
@@ -35,9 +36,11 @@ export default function RsvpForm() {
   };
 
   return (
-    <section id="rsvp" className="w-full bg-primary-bg py-16 px-6">
+    <section id="rsvp" className="relative w-full bg-primary-bg py-16 px-6 overflow-hidden">
+      <SectionOrnaments className="z-0" />
+
       {/* Section Header */}
-      <div className="flex flex-col items-center gap-2 mb-8">
+      <div className="relative z-10 flex flex-col items-center gap-2 mb-8">
         <motion.span
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -75,7 +78,7 @@ export default function RsvpForm() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ delay: 0.2 }}
-        className="flex flex-col gap-5 w-full max-w-sm mx-auto p-7 glass-strong rounded-[20px] shadow-[0_4px_24px_rgba(0,0,0,0.04)]"
+        className="relative z-10 flex flex-col gap-5 w-full max-w-sm mx-auto p-7 glass-strong rounded-[20px] shadow-[0_14px_34px_rgba(0,0,0,0.36)]"
       >
         {/* Name */}
         <div className="flex flex-col gap-1.5">
@@ -88,7 +91,7 @@ export default function RsvpForm() {
             onChange={(e) => setName(e.target.value)}
             placeholder="Masukkan nama Anda"
             required
-            className="w-full h-11 px-3.5 text-[13px] bg-[#F9F8FA] border border-lavender rounded-xl outline-none focus:border-accent focus:ring-1 focus:ring-accent/30 transition-all placeholder:text-[#BDBDBD]"
+            className="w-full h-11 px-3.5 text-[13px] text-text-main bg-[rgba(26,26,26,0.7)] border border-accent/30 rounded-xl outline-none focus:border-accent focus:ring-1 focus:ring-accent/30 transition-all placeholder:text-text-muted/70"
           />
         </div>
 
@@ -103,8 +106,8 @@ export default function RsvpForm() {
               onClick={() => setAttendance("hadir")}
               className={`flex-1 h-11 rounded-xl text-[13px] font-medium transition-all ${
                 attendance === "hadir"
-                  ? "border-[1.5px] border-accent bg-accent/8 text-accent"
-                  : "border-[1.5px] border-lavender bg-[#F9F8FA] text-text-muted"
+                  ? "border-[1.5px] border-accent bg-accent/16 text-accent"
+                  : "border-[1.5px] border-accent/25 bg-[rgba(26,26,26,0.7)] text-text-muted"
               }`}
             >
               Hadir
@@ -114,8 +117,8 @@ export default function RsvpForm() {
               onClick={() => setAttendance("tidak")}
               className={`flex-1 h-11 rounded-xl text-[13px] font-medium transition-all ${
                 attendance === "tidak"
-                  ? "border-[1.5px] border-accent bg-accent/8 text-accent"
-                  : "border-[1.5px] border-lavender bg-[#F9F8FA] text-text-muted"
+                  ? "border-[1.5px] border-accent bg-accent/16 text-accent"
+                  : "border-[1.5px] border-accent/25 bg-[rgba(26,26,26,0.7)] text-text-muted"
               }`}
             >
               Tidak Hadir
@@ -131,7 +134,7 @@ export default function RsvpForm() {
           <select
             value={guests}
             onChange={(e) => setGuests(e.target.value)}
-            className="w-full h-11 px-3.5 text-[13px] bg-[#F9F8FA] border border-lavender rounded-xl outline-none focus:border-accent transition-all appearance-none"
+            className="w-full h-11 px-3.5 text-[13px] text-text-main bg-[rgba(26,26,26,0.7)] border border-accent/30 rounded-xl outline-none focus:border-accent transition-all appearance-none"
           >
             {[1, 2, 3, 4, 5].map((n) => (
               <option key={n} value={n}>
@@ -151,7 +154,7 @@ export default function RsvpForm() {
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Tulis ucapan dan doa untuk kedua mempelai..."
             rows={3}
-            className="w-full p-3.5 text-[13px] bg-[#F9F8FA] border border-lavender rounded-xl outline-none focus:border-accent focus:ring-1 focus:ring-accent/30 transition-all placeholder:text-[#BDBDBD] resize-none"
+            className="w-full p-3.5 text-[13px] text-text-main bg-[rgba(26,26,26,0.7)] border border-accent/30 rounded-xl outline-none focus:border-accent focus:ring-1 focus:ring-accent/30 transition-all placeholder:text-text-muted/70 resize-none"
           />
         </div>
 
@@ -164,7 +167,7 @@ export default function RsvpForm() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="w-full h-12 bg-gradient-to-r from-accent to-accent-dark rounded-[14px] text-white text-sm font-semibold tracking-[1.5px] shadow-[0_4px_16px_rgba(196,164,138,0.3)] hover:shadow-[0_6px_20px_rgba(196,164,138,0.4)] transition-shadow"
+              className="w-full h-12 bg-gradient-to-r from-accent to-accent-dark rounded-[14px] text-black text-sm font-semibold tracking-[1.5px] shadow-[0_4px_16px_rgba(212,175,55,0.3)] hover:shadow-[0_6px_20px_rgba(212,175,55,0.4)] transition-shadow"
             >
               KIRIM RSVP
             </motion.button>

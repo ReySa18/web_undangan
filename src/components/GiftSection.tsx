@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
+import { SectionOrnaments } from "@/components/DecorativeOrnaments";
 
 const accounts = [
   {
@@ -30,8 +31,8 @@ const accounts = [
   {
     id: "mandiri",
     bank: "Bank Mandiri",
-    accountNumber: "0987654321",
-    accountName: "Yessi",
+    accountNumber: "1070012642429",
+    accountName: "Yessi Meilinda S",
     color: "#003876",
     logo: (
       <svg width="56" height="20" viewBox="0 0 112 28" fill="none">
@@ -87,7 +88,7 @@ function AccountCard({
       initial={{ opacity: 0, y: 40, rotateX: 5 }}
       animate={isInView ? { opacity: 1, y: 0, rotateX: 0 } : {}}
       transition={{ duration: 0.7, delay, type: "spring", stiffness: 80 }}
-      className="flex flex-col items-center gap-5 w-full max-w-sm p-7 glass-strong rounded-[20px] shadow-[0_4px_24px_rgba(0,0,0,0.04)]"
+      className="flex flex-col items-center gap-5 w-full max-w-sm p-7 glass-strong rounded-[20px] shadow-[0_12px_32px_rgba(0,0,0,0.36)]"
       style={{ perspective: "1000px" }}
     >
       {/* Bank Logo */}
@@ -112,7 +113,7 @@ function AccountCard({
       {/* Copy Button */}
       <button
         onClick={handleCopy}
-        className="flex items-center justify-center gap-2 px-6 py-2.5 border-[1.5px] border-accent rounded-full hover:bg-accent hover:text-white transition-all group"
+        className="flex items-center justify-center gap-2 px-6 py-2.5 border-[1.5px] border-accent rounded-full hover:bg-accent hover:text-black transition-all group"
       >
         <AnimatePresence mode="wait">
           {copied ? (
@@ -132,7 +133,7 @@ function AccountCard({
                 strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="text-green-600 group-hover:text-white"
+                className="text-green-600 group-hover:text-black"
               >
                 <motion.path
                   d="M5 13l4 4L19 7"
@@ -141,7 +142,7 @@ function AccountCard({
                   transition={{ duration: 0.3 }}
                 />
               </svg>
-              <span className="text-xs font-semibold text-green-600 group-hover:text-white tracking-[1px]">
+              <span className="text-xs font-semibold text-green-600 group-hover:text-black tracking-[1px]">
                 TERSALIN!
               </span>
             </motion.div>
@@ -162,12 +163,12 @@ function AccountCard({
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="text-accent group-hover:text-white"
+                className="text-accent group-hover:text-black"
               >
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
                 <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
               </svg>
-              <span className="text-xs font-semibold text-accent group-hover:text-white tracking-[1px]">
+              <span className="text-xs font-semibold text-accent group-hover:text-black tracking-[1px]">
                 SALIN NO. REKENING
               </span>
             </motion.div>
@@ -180,9 +181,11 @@ function AccountCard({
 
 export default function GiftSection() {
   return (
-    <section className="w-full bg-primary-bg py-16 px-6">
+    <section className="relative w-full bg-primary-bg py-16 px-6 overflow-hidden">
+      <SectionOrnaments className="z-0" />
+
       {/* Section Header */}
-      <div className="flex flex-col items-center gap-2 mb-8">
+      <div className="relative z-10 flex flex-col items-center gap-2 mb-8">
         <motion.span
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -219,9 +222,9 @@ export default function GiftSection() {
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
         transition={{ delay: 0.2, type: "spring", stiffness: 100 }}
-        className="flex items-center justify-center mb-6"
+        className="relative z-10 flex items-center justify-center mb-6"
       >
-        <div className="flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-accent to-accent-dark shadow-[0_4px_16px_rgba(196,164,138,0.3)]">
+        <div className="flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-accent to-accent-dark shadow-[0_4px_16px_rgba(212,175,55,0.3)]">
           <svg
             width="28"
             height="28"
@@ -241,7 +244,7 @@ export default function GiftSection() {
       </motion.div>
 
       {/* Account Cards */}
-      <div className="flex flex-col items-center gap-6 max-w-md mx-auto">
+      <div className="relative z-10 flex flex-col items-center gap-6 max-w-md mx-auto">
         {accounts.map((acc, i) => (
           <AccountCard key={acc.id} account={acc} delay={i * 0.15} />
         ))}

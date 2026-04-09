@@ -30,7 +30,7 @@ export default function FabRsvp() {
           exit={{ opacity: 0, scale: 0.5, y: 20 }}
           transition={{ type: "spring", stiffness: 200, damping: 20 }}
           onClick={scrollToRsvp}
-          className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-accent to-accent-dark text-white rounded-full shadow-lg shadow-accent/30 animate-pulse-glow hover:shadow-xl transition-shadow"
+          className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-accent to-accent-dark text-black rounded-full shadow-lg shadow-accent/30 animate-pulse-glow hover:shadow-xl transition-shadow"
         >
           <svg
             width="18"

@@ -1,67 +1,107 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence, useInView } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { SectionOrnaments } from "@/components/DecorativeOrnaments";
 
 const photos = [
-  { id: 1, src: "/hero-photo.webp", alt: "Prewedding 1", height: 220 },
-  { id: 2, src: "/hero-photo.webp", alt: "Prewedding 2", height: 160 },
-  { id: 3, src: "/hero-photo.webp", alt: "Prewedding 3", height: 200 },
-  { id: 4, src: "/hero-photo.webp", alt: "Prewedding 4", height: 160 },
-  { id: 5, src: "/hero-photo.webp", alt: "Prewedding 5", height: 240 },
-  { id: 6, src: "/hero-photo.webp", alt: "Prewedding 6", height: 180 },
+  { id: 1, src: "/DSC_9892.webp", alt: "Momen 01" },
+  { id: 2, src: "/DSC_9970.webp", alt: "Momen 02" },
+  { id: 3, src: "/DSC_9982.webp", alt: "Momen 03" },
+  { id: 4, src: "/IMG_6515.JPG.webp", alt: "Momen 04" },
+  { id: 5, src: "/yessi 2.webp", alt: "Momen 19" },
+  { id: 6, src: "/yessi 3.webp", alt: "Momen 20" },
+  { id: 7, src: "/DSC_0175.webp", alt: "Momen 07" },
+  { id: 8, src: "/DSC_0231.webp", alt: "Momen 08" },
+  { id: 9, src: "/hero.webp", alt: "Momen 09" },
+  { id: 10, src: "/DSC_0165.webp", alt: "Momen 05" },
+  { id: 11, src: "/DSC_0170.webp", alt: "Momen 06" },
+  { id: 12, src: "/DSC_0313.webp", alt: "Momen 12" },
+  { id: 13, src: "/DSC_0330.webp", alt: "Momen 13" },
+  { id: 14, src: "/DSC_0119.webp", alt: "Momen 14" },
+  { id: 15, src: "/DSC_0125.webp", alt: "Momen 15" },
+  { id: 16, src: "/DSC_0130.webp", alt: "Momen 16" },
+  { id: 17, src: "/DSC_0139.webp", alt: "Momen 17" },
+  { id: 18, src: "/yessi 1.webp", alt: "Momen 18" },
+  { id: 19, src: "/DSC_0294.webp", alt: "Momen 10" },
+  { id: 20, src: "/DSC_0310.webp", alt: "Momen 11" },
+  { id: 21, src: "/yessi 4.webp", alt: "Momen 21" },
+  { id: 22, src: "/yessi 5.webp", alt: "Momen 22" },
+  { id: 23, src: "/yessi 6.webp", alt: "Momen 23" },
+  { id: 24, src: "/DSC_0292.webp", alt: "Momen 24" },
 ];
 
-function GalleryItem({
-  photo,
-  index,
-  onClick,
-}: {
-  photo: (typeof photos)[0];
-  index: number;
-  onClick: () => void;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-30px" });
-
-  return (
-    <motion.div
-      ref={ref}
-      layoutId={`photo-${photo.id}`}
-      initial={{ opacity: 0, y: 30 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      onClick={onClick}
-      className="relative rounded-xl overflow-hidden cursor-pointer group"
-      style={{ height: photo.height }}
-    >
-      <Image
-        src={photo.src}
-        alt={photo.alt}
-        fill
-        className="object-cover transition-transform duration-500 group-hover:scale-110"
-        sizes="(max-width: 768px) 50vw, 33vw"
-        loading="lazy"
-      />
-      {/* Hover overlay */}
-      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-    </motion.div>
-  );
+function wrapIndex(value: number, length: number) {
+  return (value % length + length) % length;
 }
 
 export default function InteractiveGallery() {
-  const [selectedPhoto, setSelectedPhoto] = useState<
-    (typeof photos)[0] | null
-  >(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-  const leftColumn = photos.filter((_, i) => i % 2 === 0);
-  const rightColumn = photos.filter((_, i) => i % 2 !== 0);
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth < 768);
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  useEffect(() => {
+    if (isPaused || selectedIndex !== null) return;
+
+    const timer = window.setInterval(() => {
+      setActiveIndex((prev) => wrapIndex(prev + 1, photos.length));
+    }, 2800);
+
+    return () => window.clearInterval(timer);
+  }, [isPaused, selectedIndex]);
+
+  const moveLightbox = (delta: number) => {
+    setSelectedIndex((prev) => {
+      if (prev === null) return prev;
+      const next = wrapIndex(prev + delta, photos.length);
+      setActiveIndex(next);
+      return next;
+    });
+  };
+
+  useEffect(() => {
+    if (selectedIndex === null) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSelectedIndex(null);
+      if (event.key === "ArrowRight") moveLightbox(1);
+      if (event.key === "ArrowLeft") moveLightbox(-1);
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [selectedIndex]);
+
+  const visibleSlides = useMemo(
+    () =>
+      [-3, -2, -1, 0, 1, 2, 3].map((offset) => {
+        const index = wrapIndex(activeIndex + offset, photos.length);
+        return {
+          offset,
+          index,
+          distance: Math.abs(offset),
+          photo: photos[index],
+        };
+      }),
+    [activeIndex]
+  );
+
+  const selectedPhoto = selectedIndex !== null ? photos[selectedIndex] : null;
 
   return (
-    <section className="w-full bg-secondary-bg py-16 px-6">
-      {/* Section Header */}
-      <div className="flex flex-col items-center gap-2 mb-8">
+    <section className="relative w-full bg-secondary-bg py-16 px-6 overflow-hidden">
+      <SectionOrnaments className="z-0 opacity-75" />
+
+      <div className="relative z-10 flex flex-col items-center gap-2 mb-2">
         <motion.span
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -75,78 +115,164 @@ export default function InteractiveGallery() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.1 }}
-          className="font-heading text-[28px] font-bold text-text-main"
+          className="font-heading text-[30px] font-bold text-text-main"
         >
-          Galeri Foto
+          Galeri 22 Foto
         </motion.h2>
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+          className="text-[13px] text-text-muted text-center leading-relaxed max-w-md"
+        >
+          Slider berputar otomatis. Tekan foto untuk melihat tampilan penuh.
+        </motion.p>
       </div>
 
-      {/* Masonry Grid */}
-      <div className="flex flex-row gap-2.5 max-w-md mx-auto">
-        {/* Left Column */}
-        <div className="flex flex-col gap-2.5 flex-1">
-          {leftColumn.map((photo, i) => (
-            <GalleryItem
+      <div
+        className="relative z-10 mx-auto mt-8 h-[300px] w-full max-w-5xl md:h-[420px]"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+      >
+        {visibleSlides.map(({ offset, index, distance, photo }) => {
+          const x = offset * (isMobile ? 96 : 190);
+          const y = distance === 0 ? 0 : distance === 1 ? 8 : 18;
+          const scale =
+            distance === 0 ? 1 : distance === 1 ? 0.82 : distance === 2 ? 0.64 : 0.48;
+          const opacity = distance === 0 ? 1 : distance === 1 ? 0.72 : distance === 2 ? 0.46 : 0.26;
+
+          return (
+            <motion.button
               key={photo.id}
-              photo={photo}
-              index={i * 2}
-              onClick={() => setSelectedPhoto(photo)}
-            />
-          ))}
-        </div>
-        {/* Right Column */}
-        <div className="flex flex-col gap-2.5 flex-1">
-          {rightColumn.map((photo, i) => (
-            <GalleryItem
-              key={photo.id}
-              photo={photo}
-              index={i * 2 + 1}
-              onClick={() => setSelectedPhoto(photo)}
-            />
-          ))}
-        </div>
+              type="button"
+              onClick={() => {
+                setActiveIndex(index);
+                setSelectedIndex(index);
+              }}
+              onFocus={() => setIsPaused(true)}
+              onBlur={() => setIsPaused(false)}
+              animate={{
+                x,
+                y,
+                scale,
+                opacity,
+                rotateY: offset * (isMobile ? -8 : -14),
+                zIndex: 50 - distance,
+              }}
+              transition={{ type: "spring", stiffness: 190, damping: 24 }}
+              whileHover={distance === 0 ? { scale: 1.03 } : { scale: Math.min(scale + 0.04, 1) }}
+              className="absolute left-1/2 top-1/2 h-[220px] w-[160px] md:h-[330px] md:w-[238px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-2xl border border-accent/35 bg-black/30 shadow-[0_16px_40px_rgba(0,0,0,0.45)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            >
+              <Image
+                src={photo.src}
+                alt={photo.alt}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 45vw, 280px"
+              />
+              <div
+                className={`absolute inset-0 ${distance === 0
+                  ? "bg-gradient-to-t from-black/50 via-black/10 to-black/0"
+                  : "bg-black/35"
+                  }`}
+              />
+              <span
+                className={`absolute bottom-3 left-3 text-[10px] tracking-[2px] uppercase ${distance === 0 ? "text-text-main" : "text-text-muted"
+                  }`}
+              >
+                Momen {String(index + 1).padStart(2, "0")}
+              </span>
+            </motion.button>
+          );
+        })}
+
+        <button
+          type="button"
+          onClick={() => setActiveIndex((prev) => wrapIndex(prev - 1, photos.length))}
+          className="absolute left-1 top-1/2 z-40 -translate-y-1/2 rounded-full border border-accent/45 bg-[rgba(15,10,10,0.7)] px-3 py-2 text-accent transition hover:bg-[rgba(15,10,10,0.9)] md:left-4"
+        >
+          &#8249;
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveIndex((prev) => wrapIndex(prev + 1, photos.length))}
+          className="absolute right-1 top-1/2 z-40 -translate-y-1/2 rounded-full border border-accent/45 bg-[rgba(15,10,10,0.7)] px-3 py-2 text-accent transition hover:bg-[rgba(15,10,10,0.9)] md:right-4"
+        >
+          &#8250;
+        </button>
       </div>
 
-      {/* Lightbox */}
+      <div className="relative z-10 mt-6 flex items-center justify-center">
+        <span className="rounded-full border border-accent/35 bg-[rgba(15,10,10,0.7)] px-4 py-1 text-[11px] tracking-[2px] uppercase text-text-muted">
+          {activeIndex + 1} / {photos.length}
+        </span>
+      </div>
+
       <AnimatePresence>
         {selectedPhoto && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setSelectedPhoto(null)}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-6"
+            className="fixed inset-0 z-[90] flex items-center justify-center bg-black/90 backdrop-blur-md p-5"
+            onClick={() => setSelectedIndex(null)}
           >
+            <button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                setSelectedIndex(null);
+              }}
+              className="absolute right-5 top-5 rounded-full border border-accent/35 bg-[rgba(15,10,10,0.75)] px-3 py-1.5 text-text-main"
+            >
+              X
+            </button>
+
+            <button
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                moveLightbox(-1);
+              }}
+              className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full border border-accent/40 bg-[rgba(15,10,10,0.75)] px-3 py-2 text-accent md:left-8"
+            >
+              &#8249;
+            </button>
+
             <motion.div
-              layoutId={`photo-${selectedPhoto.id}`}
-              className="relative w-full max-w-lg aspect-[3/4] rounded-2xl overflow-hidden"
+              initial={{ opacity: 0, scale: 0.94, y: 12 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.94, y: 12 }}
+              transition={{ duration: 0.25 }}
+              className="relative h-[78vh] w-full max-w-3xl overflow-hidden rounded-2xl border border-accent/30"
+              onClick={(event) => event.stopPropagation()}
             >
               <Image
                 src={selectedPhoto.src}
                 alt={selectedPhoto.alt}
                 fill
-                className="object-cover"
-                sizes="(max-width: 768px) 90vw, 500px"
+                className="object-contain bg-black"
+                sizes="(max-width: 768px) 95vw, 950px"
+                priority
               />
             </motion.div>
 
-            {/* Close button */}
             <button
-              onClick={() => setSelectedPhoto(null)}
-              className="absolute top-6 right-6 w-10 h-10 rounded-full glass flex items-center justify-center"
+              type="button"
+              onClick={(event) => {
+                event.stopPropagation();
+                moveLightbox(1);
+              }}
+              className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full border border-accent/40 bg-[rgba(15,10,10,0.75)] px-3 py-2 text-accent md:right-8"
             >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#2D2D30"
-                strokeWidth="2"
-                strokeLinecap="round"
-              >
-                <path d="M18 6L6 18M6 6l12 12" />
-              </svg>
+              &#8250;
             </button>
+
+            <p className="absolute bottom-5 left-1/2 -translate-x-1/2 rounded-full border border-accent/30 bg-[rgba(15,10,10,0.75)] px-4 py-1.5 text-[11px] tracking-[2px] uppercase text-text-muted">
+              {selectedPhoto.alt} ({(selectedIndex ?? 0) + 1} / {photos.length})
+            </p>
           </motion.div>
         )}
       </AnimatePresence>

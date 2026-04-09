@@ -2,12 +2,13 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { SectionOrnaments } from "@/components/DecorativeOrnaments";
 
 const locations = [
   {
     id: "akad",
     title: "Pemberkatan Nikah",
-    venue: "Gereja Santo Paulus",
+    venue: "Gereja Santo Benediktus",
     address: "Jl. Raya Kebahagiaan No. 123, Jakarta Selatan",
     embedUrl:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.2!2d106.8!3d-6.2!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMTInMDAuMCJTIDEwNsKwNDgnMDAuMCJF!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid",
@@ -27,7 +28,7 @@ const locations = [
   {
     id: "resepsi",
     title: "Resepsi",
-    venue: "Ballroom Grand Hotel",
+    venue: "OTW",
     address: "Jl. Raya Kebahagiaan No. 456, Jakarta Selatan",
     embedUrl:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.5!2d106.82!3d-6.22!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMTMnMTIuMCJTIDEwNsKwNDknMTIuMCJF!5e0!3m2!1sid!2sid!4v1700000000001!5m2!1sid!2sid",
@@ -62,10 +63,10 @@ function MapCard({
       initial={{ opacity: 0, y: 40 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.7, delay, type: "spring", stiffness: 80 }}
-      className="flex flex-col items-center gap-4 w-full max-w-sm glass-strong rounded-[20px] shadow-[0_4px_24px_rgba(0,0,0,0.04)] overflow-hidden"
+      className="flex flex-col items-center gap-4 w-full max-w-sm glass-strong rounded-[20px] shadow-[0_10px_32px_rgba(0,0,0,0.36)] overflow-hidden"
     >
       {/* Map Embed */}
-      <div className="w-full h-[200px] bg-lavender-light">
+      <div className="w-full h-[200px] bg-lavender-light border-b border-accent/20">
         <iframe
           src={location.embedUrl}
           width="100%"
@@ -113,7 +114,7 @@ function MapCard({
             height="14"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="white"
+            stroke="black"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -121,7 +122,7 @@ function MapCard({
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
             <circle cx="12" cy="10" r="3" />
           </svg>
-          <span className="text-xs font-semibold text-white tracking-[1px]">
+          <span className="text-xs font-semibold text-black tracking-[1px]">
             BUKA DI GOOGLE MAPS
           </span>
         </a>
@@ -132,9 +133,11 @@ function MapCard({
 
 export default function MapSection() {
   return (
-    <section className="w-full bg-secondary-bg py-16 px-6">
+    <section className="relative w-full bg-secondary-bg py-16 px-6 overflow-hidden">
+      <SectionOrnaments className="z-0" />
+
       {/* Section Header */}
-      <div className="flex flex-col items-center gap-2 mb-8">
+      <div className="relative z-10 flex flex-col items-center gap-2 mb-8">
         <motion.span
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -165,7 +168,7 @@ export default function MapSection() {
       </div>
 
       {/* Map Cards */}
-      <div className="flex flex-col items-center gap-6 max-w-md mx-auto">
+      <div className="relative z-10 flex flex-col items-center gap-6 max-w-md mx-auto">
         {locations.map((loc, i) => (
           <MapCard key={loc.id} location={loc} delay={i * 0.15} />
         ))}

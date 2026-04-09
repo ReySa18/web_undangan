@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { SectionOrnaments } from "@/components/DecorativeOrnaments";
 
 function getTimeRemaining(targetDate: Date) {
   const now = new Date().getTime();
@@ -19,7 +20,7 @@ function getTimeRemaining(targetDate: Date) {
 
 function CountdownUnit({ value, label }: { value: number; label: string }) {
   return (
-    <div className="flex flex-col items-center gap-1 glass rounded-2xl px-3 py-4 w-[72px]">
+    <div className="flex flex-col items-center gap-1 glass rounded-2xl px-3 py-4 w-[72px] border border-accent/30 shadow-[0_8px_20px_rgba(0,0,0,0.28)]">
       <motion.span
         key={value}
         initial={{ y: -10, opacity: 0 }}
@@ -65,7 +66,7 @@ function EventCard({
       animate={isInView ? { opacity: 1, y: 0, rotateX: 0 } : {}}
       transition={{ duration: 0.7, delay, type: "spring", stiffness: 80 }}
       whileHover={{ scale: 1.02, rotateY: 2 }}
-      className="flex flex-col items-center gap-4 w-full max-w-sm p-7 glass-strong rounded-[20px] shadow-[0_4px_24px_rgba(0,0,0,0.04)] cursor-default"
+      className="flex flex-col items-center gap-4 w-full max-w-sm p-7 glass-strong rounded-[20px] shadow-[0_14px_34px_rgba(0,0,0,0.36)] cursor-default"
       style={{ perspective: "1000px" }}
     >
       {/* Icon */}
@@ -99,7 +100,7 @@ function EventCard({
         rel="noopener noreferrer"
         className="flex items-center justify-center px-6 py-2.5 bg-accent hover:bg-accent-dark transition-colors rounded-full"
       >
-        <span className="text-xs font-semibold text-white tracking-[1px]">
+        <span className="text-xs font-semibold text-black tracking-[1px]">
           BUKA PETA
         </span>
       </a>
@@ -108,7 +109,7 @@ function EventCard({
 }
 
 export default function EventDetails() {
-  const targetDate = new Date("2026-12-25T08:00:00+07:00");
+  const targetDate = new Date("2026-05-16T00:00:00+07:00");
   const [time, setTime] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [mounted, setMounted] = useState(false);
 
@@ -122,9 +123,11 @@ export default function EventDetails() {
   }, []);
 
   return (
-    <section className="w-full bg-primary-bg py-16 px-6">
+    <section className="relative w-full bg-primary-bg py-16 px-6 overflow-hidden">
+      <SectionOrnaments className="z-0" />
+
       {/* Section Header */}
-      <div className="flex flex-col items-center gap-2 mb-8">
+      <div className="relative z-10 flex flex-col items-center gap-2 mb-8">
         <motion.span
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -150,7 +153,7 @@ export default function EventDetails() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ delay: 0.2 }}
-        className="flex flex-row items-center justify-center gap-3 mb-8"
+        className="relative z-10 flex flex-row items-center justify-center gap-3 mb-8"
       >
         <CountdownUnit value={time.days} label="Hari" />
         <CountdownUnit value={time.hours} label="Jam" />
@@ -159,10 +162,10 @@ export default function EventDetails() {
       </motion.div>
 
       {/* Event Cards */}
-      <div className="flex flex-col items-center gap-6 max-w-md mx-auto">
+      <div className="relative z-10 flex flex-col items-center gap-6 max-w-md mx-auto">
         <EventCard
           title="Pemberkatan Nikah"
-          date="Jumat, 25 Desember 2026"
+          date="Sabtu, 16 Mei 2026"
           time="08:00 - 10:00 WIB"
           venue="Gereja Santo Paulus"
           address="Jl. Raya Kebahagiaan No. 123, Jakarta Selatan"
@@ -182,7 +185,7 @@ export default function EventDetails() {
         />
         <EventCard
           title="Resepsi"
-          date="Jumat, 25 Desember 2026"
+          date="Sabtu, 16 Mei 2026"
           time="11:00 - 14:00 WIB"
           venue="Ballroom Grand Hotel"
           address="Jl. Raya Kebahagiaan No. 456, Jakarta Selatan"

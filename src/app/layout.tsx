@@ -22,12 +22,12 @@ const greatVibes = Great_Vibes({
 });
 
 export const metadata: Metadata = {
-  title: "Ahmad & Aisyah Wedding",
+  title: "Sono & Yessi",
   description:
     "Kami mengundang Anda untuk berbagi kebahagiaan di hari pernikahan kami.",
   openGraph: {
-    title: "Ahmad & Aisyah Wedding Invitation",
-    description: "25 Desember 2026 - Save The Date",
+    title: "Sono & Yessi Wedding Invitation",
+    description: "16 Mei 2026 - Save The Date",
     type: "website",
   },
 };

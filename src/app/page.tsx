@@ -1,5 +1,6 @@
 import HeroSection from "@/components/HeroSection";
 import StoryTimeline from "@/components/StoryTimeline";
+import { BrideProfileSection, GroomProfileSection } from "@/components/CoupleProfiles";
 import EventDetails from "@/components/EventDetails";
 import MapSection from "@/components/MapSection";
 import InteractiveGallery from "@/components/InteractiveGallery";
@@ -14,6 +15,8 @@ export default function Home() {
     <SectionScroller>
       <main className="min-h-screen">
         <HeroSection />
+        <GroomProfileSection />
+        <BrideProfileSection />
         <StoryTimeline />
         <EventDetails />
         <MapSection />
