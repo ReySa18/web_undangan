@@ -7,7 +7,7 @@ import { SectionOrnaments } from "@/components/DecorativeOrnaments";
 
 const photos = [
   { id: 1, src: "/DSC_9892.webp", alt: "Momen 01" },
-  { id: 2, src: "/DSC_9970.webp", alt: "Momen 02" },
+  { id: 2, src: "/edit.webp", alt: "Momen 02" },
   { id: 3, src: "/DSC_9982.webp", alt: "Momen 03" },
   { id: 4, src: "/IMG_6515.JPG.webp", alt: "Momen 04" },
   { id: 5, src: "/yessi 2.webp", alt: "Momen 19" },
