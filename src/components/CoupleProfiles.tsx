@@ -163,7 +163,7 @@ export function BrideProfileSection() {
       imageSrc="/yessi 4.webp"
       imagePosition="object-[center_28%] md:object-[center_50%]"
       description="Sosok yang santai dan tulus."
-      parents="Putri dari Alm. Bapak Poster Simbolon dan Ibu Ruslan Gultom."
+      parents="Putri dari Alm. Bapak Drs. Poster Simbolon dan Ibu Ruslan Gultom, S.Pd."
       quote="Cinta adalah tentang saling menjaga, bahkan di hari-hari paling sederhana"
       align="left"
     />
