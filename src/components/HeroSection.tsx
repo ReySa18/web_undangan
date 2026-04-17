@@ -66,7 +66,7 @@ export default function HeroSection() {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="mt-3 font-heading text-[42px] md:text-6xl font-bold text-text-main tracking-wide drop-shadow-md"
         >
-          Sono
+          Harsono
         </motion.h1>
 
         <motion.span

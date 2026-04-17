@@ -158,7 +158,7 @@ export function BrideProfileSection() {
     <PersonalSection
       id="profil-wanita"
       badge="Bride Profile"
-      name="Yessi"
+      name="Yessi Meilinda Simbolon, S.E."
       role="Calon Mempelai Wanita"
       imageSrc="/yessi 4.webp"
       imagePosition="object-[center_28%] md:object-[center_50%]"
@@ -175,7 +175,7 @@ export function GroomProfileSection() {
     <PersonalSection
       id="profil-pria"
       badge="Groom Profile"
-      name="Sono"
+      name="Harsono Muliono Dame Pakpahan, S.T."
       role="Calon Mempelai Pria"
       imageSrc="/DSC_0119.webp"
       imagePosition="object-[center_32%] md:object-[center_40%]"
