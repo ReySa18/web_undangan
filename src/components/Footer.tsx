@@ -32,7 +32,7 @@ export default function Footer() {
           className="flex flex-col items-center gap-1"
         >
           <span className="font-heading text-2xl font-semibold text-text-main">
-            Sono & Yessi
+            Harsono & Yessi
           </span>
           <span className="font-script text-lg text-accent">
             16 Mei 2026
