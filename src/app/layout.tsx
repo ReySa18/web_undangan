@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Inter, Great_Vibes } from "next/font/google";
 import "./globals.css";
+import { AudioProvider } from "@/components/AudioProvider";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -42,7 +43,9 @@ export default function RootLayout({
       lang="id"
       className={`${playfair.variable} ${inter.variable} ${greatVibes.variable}`}
     >
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <AudioProvider>{children}</AudioProvider>
+      </body>
     </html>
   );
 }

@@ -30,6 +30,9 @@ function isInteractiveElement(target: EventTarget | null): boolean {
     if (target.closest(selector)) return true;
   }
 
+  // Skip any element (or ancestor) with data-no-scroll attribute
+  if (target.closest("[data-no-scroll]")) return true;
+
   // Skip iframe clicks (map embeds)
   if (target.tagName === "IFRAME") return true;
 
@@ -46,6 +49,7 @@ function isInteractiveElement(target: EventTarget | null): boolean {
 
   return false;
 }
+
 
 export default function SectionScroller({
   children,

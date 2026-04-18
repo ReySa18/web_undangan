@@ -10,24 +10,29 @@ import Footer from "@/components/Footer";
 import FabRsvp from "@/components/FabRsvp";
 import SectionScroller from "@/components/SectionScroller";
 import MusicPlayer from "@/components/MusicPlayer";
+import CoverScreen from "@/components/CoverScreen";
 
 export default function Home() {
   return (
-    <SectionScroller>
-      <main className="min-h-screen">
-        <HeroSection />
-        <GroomProfileSection />
-        <BrideProfileSection />
-        <StoryTimeline />
-        <EventDetails />
-        <MapSection />
-        <InteractiveGallery />
-        <GiftSection />
-        <RsvpForm />
-        <Footer />
-        <FabRsvp />
-        <MusicPlayer />
-      </main>
-    </SectionScroller>
+    <>
+      <CoverScreen />
+      <SectionScroller>
+        <main className="min-h-screen">
+          <HeroSection />
+          <GroomProfileSection />
+          <BrideProfileSection />
+          <StoryTimeline />
+          <EventDetails />
+          <MapSection />
+          <InteractiveGallery />
+          <GiftSection />
+          <RsvpForm />
+          <Footer />
+          <FabRsvp />
+          <MusicPlayer />
+        </main>
+      </SectionScroller>
+    </>
   );
 }
+
