@@ -27,25 +27,44 @@ export default function RsvpForm() {
   const formY = useTransform(scrollYProgress, [0, 0.24, 0.76, 1], [28, 0, 0, -22]);
   const formScale = useTransform(scrollYProgress, [0, 0.24, 0.76, 1], [0.97, 1, 1, 0.985]);
 
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwFAB3QnLFt3iK0VRt4FWgnq-W6qGM6G_ly6kwveMYFPukMj5eGCmLKA2gWtH-QYA0Q/exec";
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !attendance) return;
 
     setFormState("submitting");
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      const params = new URLSearchParams({
+        name,
+        attendance: attendance ?? "",
+        guests,
+        message,
+      });
 
-    setFormState("success");
+      // Tembak URL dengan method GET + mode no-cors.
+      // Balasan dari Google akan menolak iframe (403), tapi jika di-fetch biasa tidak akan diblok karena tidak me-render HTML-nya.
+      await fetch(`${SCRIPT_URL}?${params.toString()}`, {
+        method: "GET",
+        mode: "no-cors",
+      });
 
-    // Reset after success animation
-    setTimeout(() => {
-      setName("");
-      setAttendance(null);
-      setGuests("1");
-      setMessage("");
+      setFormState("success");
+
+      // Reset after success animation
+      setTimeout(() => {
+        setName("");
+        setAttendance(null);
+        setGuests("1");
+        setMessage("");
+        setFormState("idle");
+      }, 3000);
+
+    } catch (error) {
+      console.error('Error submitting form', error);
       setFormState("idle");
-    }, 3000);
+    }
   };
 
   return (
@@ -120,22 +139,20 @@ export default function RsvpForm() {
             <button
               type="button"
               onClick={() => setAttendance("hadir")}
-              className={`flex-1 h-11 rounded-xl text-[13px] font-medium transition-all ${
-                attendance === "hadir"
+              className={`flex-1 h-11 rounded-xl text-[13px] font-medium transition-all ${attendance === "hadir"
                   ? "border-[1.5px] border-accent bg-accent/16 text-accent"
                   : "border-[1.5px] border-accent/25 bg-[rgba(26,26,26,0.7)] text-text-muted"
-              }`}
+                }`}
             >
               Hadir
             </button>
             <button
               type="button"
               onClick={() => setAttendance("tidak")}
-              className={`flex-1 h-11 rounded-xl text-[13px] font-medium transition-all ${
-                attendance === "tidak"
+              className={`flex-1 h-11 rounded-xl text-[13px] font-medium transition-all ${attendance === "tidak"
                   ? "border-[1.5px] border-accent bg-accent/16 text-accent"
                   : "border-[1.5px] border-accent/25 bg-[rgba(26,26,26,0.7)] text-text-muted"
-              }`}
+                }`}
             >
               Tidak Hadir
             </button>
