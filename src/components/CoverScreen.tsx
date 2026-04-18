@@ -299,18 +299,6 @@ export default function CoverScreen() {
             </svg>
             BUKA UNDANGAN
           </button>
-
-          <p
-            style={{
-              color: "rgba(212,175,55,0.45)",
-              fontSize: "10px",
-              letterSpacing: "1px",
-              marginTop: "14px",
-              fontFamily: "var(--font-body)",
-            }}
-          >
-            Musik akan diputar otomatis
-          </p>
         </div>
       </div>
 
