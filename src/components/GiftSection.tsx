@@ -7,9 +7,9 @@ import { SectionOrnaments } from "@/components/DecorativeOrnaments";
 const accounts = [
   {
     id: "bca",
-    bank: "BCA",
-    accountNumber: "1234567890",
-    accountName: "Sono",
+    bank: "Bank Raya",
+    accountNumber: "001001372605317",
+    accountName: "Harsono",
     color: "#003D79",
     logo: (
       <svg width="40" height="20" viewBox="0 0 80 28" fill="none">
