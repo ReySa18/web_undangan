@@ -10,9 +10,18 @@ export default function CoverScreen() {
   const [isLeaving, setIsLeaving] = useState(false);
   const [isGone, setIsGone] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [guestName, setGuestName] = useState<string>("Tamu Undangan");
 
   useEffect(() => {
     setMounted(true);
+    // Baca nama tamu dari URL query param ?to=NamaTamu
+    const params = new URLSearchParams(window.location.search);
+    const toParam = params.get("to");
+    if (toParam && toParam.trim()) {
+      // Decode dan format: ganti "+" atau "%20" → spasi, lalu capitalize tiap kata
+      const decoded = decodeURIComponent(toParam.replace(/\+/g, " ")).trim();
+      setGuestName(decoded);
+    }
   }, []);
 
   const handleOpen = () => {
@@ -213,18 +222,34 @@ export default function CoverScreen() {
             <div style={{ flex: 1, height: "1px", background: "linear-gradient(to left, transparent, rgba(212,175,55,0.6))" }} />
           </div>
 
-          {/* Date */}
-          <p
-            style={{
-              fontFamily: "var(--font-heading)",
-              color: "rgba(212,175,55,0.85)",
-              fontSize: "13px",
-              letterSpacing: "3px",
-              marginBottom: "36px",
-            }}
-          >
-            16 MEI 2026
-          </p>
+          {/* Dear / Kepada */}
+          <div style={{ marginBottom: "36px" }}>
+            <p
+              style={{
+                fontFamily: "var(--font-heading)",
+                color: "rgba(212,175,55,0.6)",
+                fontSize: "10px",
+                letterSpacing: "3.5px",
+                textTransform: "uppercase",
+                marginBottom: "6px",
+              }}
+            >
+              Kepada Yth.
+            </p>
+            <p
+              style={{
+                fontFamily: "var(--font-script)",
+                color: "#FFFFF0",
+                fontSize: "clamp(22px, 6vw, 30px)",
+                lineHeight: 1.3,
+                margin: 0,
+                textShadow: "0 0 20px rgba(212,175,55,0.25)",
+                wordBreak: "break-word",
+              }}
+            >
+              {guestName}
+            </p>
+          </div>
 
           {/* Open button */}
           <button

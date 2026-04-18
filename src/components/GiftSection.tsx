@@ -23,7 +23,7 @@ const accounts = [
           fontWeight="bold"
           fontFamily="Arial, sans-serif"
         >
-          BCA
+          Bank Raya
         </text>
       </svg>
     ),
