@@ -8,11 +8,11 @@ const locations = [
   {
     id: "akad",
     title: "Pemberkatan Nikah",
-    venue: "Gereja Santo Benediktus",
-    address: "Jl. Raya Kebahagiaan No. 123, Jakarta Selatan",
+    venue: "Gereja Santo Benediktus Sikampar",
+    address: "Teluk Kuantan, Riau",
     embedUrl:
-      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.2!2d106.8!3d-6.2!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMTInMDAuMCJTIDEwNsKwNDgnMDAuMCJF!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid",
-    mapsUrl: "https://maps.google.com",
+      "https://www.google.com/maps?q=-0.2540437,101.6538849&z=17&output=embed",
+    mapsUrl: "https://www.google.com/maps/place/0%C2%B015'14.6%22S+101%C2%B039'14.0%22E/@-0.2540437,101.65131,17z/data=!3m1!4b1!4m4!3m3!8m2!3d-0.2540437!4d101.6538849?hl=en&entry=ttu&g_ep=EgoyMDI2MDQxNS4wIKXMDSoASAFQAw%3D%3D",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
         <path
@@ -28,11 +28,11 @@ const locations = [
   {
     id: "resepsi",
     title: "Resepsi",
-    venue: "OTW",
-    address: "Jl. Raya Kebahagiaan No. 456, Jakarta Selatan",
+    venue: "Gedung Serbaguna",
+    address: "Desa Sikampar, Teluk Kuantan, Riau",
     embedUrl:
-      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.5!2d106.82!3d-6.22!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMTMnMTIuMCJTIDEwNsKwNDknMTIuMCJF!5e0!3m2!1sid!2sid!4v1700000000001!5m2!1sid!2sid",
-    mapsUrl: "https://maps.google.com",
+    "https://www.google.com/maps?q=-0.2540437,101.6538849&z=17&output=embed",
+    mapsUrl: "https://www.google.com/maps/place/0%C2%B015'14.6%22S+101%C2%B039'14.0%22E/@-0.2540437,101.65131,17z/data=!3m1!4b1!4m4!3m3!8m2!3d-0.2540437!4d101.6538849?hl=en&entry=ttu&g_ep=EgoyMDI2MDQxNS4wIKXMDSoASAFQAw%3D%3D",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
         <path
