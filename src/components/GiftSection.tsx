@@ -6,7 +6,7 @@ import { SectionOrnaments } from "@/components/DecorativeOrnaments";
 
 const accounts = [
   {
-    id: "bca",
+    id: "Bank Raya",
     bank: "Bank Raya",
     accountNumber: "001001372605317",
     accountName: "Harsono",
