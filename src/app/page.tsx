@@ -9,6 +9,7 @@ import RsvpForm from "@/components/RsvpForm";
 import Footer from "@/components/Footer";
 import FabRsvp from "@/components/FabRsvp";
 import SectionScroller from "@/components/SectionScroller";
+import MusicPlayer from "@/components/MusicPlayer";
 
 export default function Home() {
   return (
@@ -25,6 +26,7 @@ export default function Home() {
         <RsvpForm />
         <Footer />
         <FabRsvp />
+        <MusicPlayer />
       </main>
     </SectionScroller>
   );
