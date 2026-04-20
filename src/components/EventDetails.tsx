@@ -191,7 +191,7 @@ export default function EventDetails() {
         <EventCard
           title="Pemberkatan Nikah"
           date="Sabtu, 16 Mei 2026"
-          time="09:00 - 10:00 WIB"
+          time="08:00 - 09:00 WIB"
           venue="Gereja Santo Benediktus Sikampar"
           address="Teluk Kuantan, Riau"
           mapUrl="https://www.google.com/maps/place/0%C2%B015'14.6%22S+101%C2%B039'14.0%22E/@-0.2540437,101.65131,17z/data=!3m1!4b1!4m4!3m3!8m2!3d-0.2540437!4d101.6538849?hl=en&entry=ttu&g_ep=EgoyMDI2MDQxNS4wIKXMDSoASAFQAw%3D%3D"
@@ -211,7 +211,7 @@ export default function EventDetails() {
         <EventCard
           title="Resepsi"
           date="Sabtu, 16 Mei 2026"
-          time="11:00 WIB s/d Selesai"
+          time="10:00 WIB s/d Selesai"
           venue="Gedung Serbaguna"
           address="Desa Sikampar, Teluk Kuantan, Riau"
           mapUrl="https://www.google.com/maps/place/0%C2%B015'14.6%22S+101%C2%B039'14.0%22E/@-0.2540437,101.65131,17z/data=!3m1!4b1!4m4!3m3!8m2!3d-0.2540437!4d101.6538849?hl=en&entry=ttu&g_ep=EgoyMDI2MDQxNS4wIKXMDSoASAFQAw%3D%3D"
