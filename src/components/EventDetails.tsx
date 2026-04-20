@@ -122,7 +122,7 @@ function EventCard({
 
 export default function EventDetails() {
   const sectionRef = useRef<HTMLElement>(null);
-  const targetDate = new Date("2026-05-16T00:00:00+07:00");
+  const targetDate = new Date("2026-05-16T08:00:00+07:00");
   const [time, setTime] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [mounted, setMounted] = useState(false);
 
